@@ -45,7 +45,11 @@ int main() {
         client_sockets[i] = 0;
     }
 
+<<<<<<< HEAD
     while (strcmp (buffer, "EXIT\n") != 0) {
+=======
+    while (1) {
+>>>>>>> 68628bdd73aed7a060088e067c036147b7fc8c31
         // Инициализация множества файловых дескрипторов для мультиплексирования
         FD_ZERO(&readfds);
         FD_SET(server_fd, &readfds);

@@ -32,14 +32,22 @@ int main() {
 
     // Отправка текста на сервер
     char message[1024];
+<<<<<<< HEAD
     while (1) {
         printf("Enter text: ");
         fgets(message, 1024, stdin);
         send(client_fd, message, strlen(message), 0);
 	if (strcmp(message, "EXIT\n") == 0) break;
+=======
+    while ((strcmp(message, "EXIT") == 0) {
+        printf("Enter text: ");
+        fgets(message, 1024, stdin);
+        send(client_fd, message, strlen(message), 0);
+>>>>>>> 68628bdd73aed7a060088e067c036147b7fc8c31
     }
     perror("send");	
     exit(EXIT_FAILURE);
+
 
     // Закрытие сокета
     close(client_fd);
