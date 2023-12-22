@@ -1,0 +1,2 @@
+all: lab4.c
+	gcc lab4 -o lab4 -Wall -Wextra

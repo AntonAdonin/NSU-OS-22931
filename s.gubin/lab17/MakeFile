@@ -1,0 +1,2 @@
+all: lab17.c
+	gcc lab17.c -o lab17
