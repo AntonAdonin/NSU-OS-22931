@@ -1,0 +1,1 @@
+gcc lab21.c -o app

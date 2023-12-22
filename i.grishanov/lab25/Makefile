@@ -1,0 +1,1 @@
+gcc lab25.c -o app

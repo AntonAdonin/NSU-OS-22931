@@ -1,0 +1,1 @@
+gcc lab18.c -o app
