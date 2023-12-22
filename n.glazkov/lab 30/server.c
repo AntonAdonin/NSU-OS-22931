@@ -56,7 +56,11 @@ int main() {
     }
 
     // Вывод преобразованного текста
+<<<<<<< HEAD
+    printf("Received from client: ", buf);
+=======
     printf("Received from client: %s\n", buf);
+>>>>>>> 68628bdd73aed7a060088e067c036147b7fc8c31
 
     // Закрытие сокетов
     close(client_fd);
