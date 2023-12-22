@@ -14,7 +14,7 @@ int main() {
     // create Unix domain socket
     client_socket = socket(AF_UNIX, SOCK_STREAM, 0);
     if (client_socket == -1) {
-        perror("Ошибка создания сокета");
+        perror("socket creation failed");
         exit(EXIT_FAILURE);
     }
 
@@ -25,13 +25,13 @@ int main() {
 
     // connect to server
     if (connect(client_socket, (struct sockaddr*)&server_address, sizeof(server_address)) == -1) {
-        perror("Ошибка подключения к серверу");
+        perror("server connection error");
         exit(EXIT_FAILURE);
     }
 
     // send data to server
     char text[] = "Hello, Server!";
-    printf("Отправлено на сервер: %s\n", text);
+    printf("send to server: %s\n", text);
     send(client_socket, text, strlen(text), 0);
 
     // get data from server 
@@ -39,7 +39,7 @@ int main() {
     ssize_t bytes_received = recv(client_socket, buffer, sizeof(buffer), 0);
     buffer[bytes_received] = '\0';
 
-    printf("Получено от сервера: %s\n", buffer);
+    printf("recived from server: %s\n", buffer);
 
     // close the conection 
     close(client_socket);
