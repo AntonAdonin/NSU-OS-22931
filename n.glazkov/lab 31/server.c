@@ -6,14 +6,13 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/select.h>
-#include <ctype.h>
 
+#define MAX_CLIENTS 30
 #define SOCKET_PATH "/tmp/socket"
 
 int main() {
     int server_fd, client_fd, max_fd, activity, i, valread;
-    int sd, new_socket, max_clients = 30;
-    int client_sockets[max_clients];
+    int client_sockets[MAX_CLIENTS];
     fd_set readfds;
     struct sockaddr_un address;
     char buffer[1025];
@@ -42,20 +41,19 @@ int main() {
     }
 
     // Инициализация массива клиентских сокетов
-    for (i = 0; i < max_clients; i++) {
+    for (i = 0; i < MAX_CLIENTS; i++) {
         client_sockets[i] = 0;
     }
 
-    // Основной цикл сервера
-    while (1) {
+    while (strcmp (buffer, "EXIT\n") != 0) {
         // Инициализация множества файловых дескрипторов для мультиплексирования
         FD_ZERO(&readfds);
         FD_SET(server_fd, &readfds);
         max_fd = server_fd;
 
         // Добавление клиентских сокетов в множество
-        for (i = 0; i < max_clients; i++) {
-            sd = client_sockets[i];
+        for (i = 0; i < MAX_CLIENTS; i++) {
+            int sd = client_sockets[i];
             if (sd > 0) {
                 FD_SET(sd, &readfds);
             }
@@ -75,7 +73,7 @@ int main() {
             }
 
             // Добавление нового клиентского сокета в массив
-            for (i = 0; i < max_clients; i++) {
+            for (i = 0; i < MAX_CLIENTS; i++) {
                 if (client_sockets[i] == 0) {
                     client_sockets[i] = client_fd;
                     break;
@@ -84,8 +82,8 @@ int main() {
         }
 
         // Обработка данных от клиентов
-        for (i = 0; i < max_clients; i++) {
-            sd = client_sockets[i];
+        for (i = 0; i < MAX_CLIENTS; i++) {
+            int sd = client_sockets[i];
             if (FD_ISSET(sd, &readfds)) {
                 if ((valread = read(sd, buffer, 1024)) == 0) {
                     // Обработка отключения клиента
@@ -93,12 +91,12 @@ int main() {
                     close(sd);
                     client_sockets[i] = 0;
                 } else {
-                    // Преобразование данных в верхний регистр и вывод
+                    // Преобразование данных в верхний регистр и вывод с порядковым номером клиента
                     buffer[valread] = '\0';
                     for (int j = 0; j < valread; j++) {
                         buffer[j] = toupper(buffer[j]);
                     }
-                    printf("%s\n", buffer);
+                    printf("Received from client %d: %s\n", i, buffer);
                 }
             }
         }

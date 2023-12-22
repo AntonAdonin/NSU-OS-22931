@@ -14,7 +14,7 @@ int main() {
     int server_fd, client_fd, epoll_fd;
     struct sockaddr_un server_addr, client_addr;
     struct epoll_event event, events[MAX_EVENTS];
-    char buffer[256];
+    char buffer[1024];
 
     // Создание сокета
     server_fd = socket(AF_UNIX, SOCK_STREAM, 0);
@@ -55,7 +55,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    while (1) {
+    while ((strcmp (buffer, "EXIT\n")) != 0) {
         int n, i;
 
         // Ожидание событий в экземпляре epoll
@@ -94,10 +94,11 @@ int main() {
                     for (int j = 0; j < bytes_read; j++) {
                         buffer[j] = toupper(buffer[j]);
                     }
-                    write(STDOUT_FILENO, buffer, bytes_read);
+                    printf("%s", buffer);
                 }
             }
         }
+	if ((strcmp (buffer, "EXIT\n")) == 0) break;
     }
 
     // Закрытие сокета
