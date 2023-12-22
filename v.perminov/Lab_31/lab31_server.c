@@ -42,6 +42,7 @@ int main() {
 
     FD_ZERO(&active_fds);
     FD_SET(sockfd, &active_fds);
+    int client_count = 0, flag = 0;
 
     while (1) {
         read_fds = active_fds;
@@ -62,7 +63,7 @@ int main() {
                     }
 
                     printf("Client connected (fd = %d)!\n", client_sockfd);
-
+                    client_count++;
                     FD_SET(client_sockfd, &active_fds);
 
                     int i;
@@ -85,6 +86,8 @@ int main() {
                     if (bytes_received <= 0) {
                         // Разрыв соединения или ошибка
                         printf("Client disconnected(fd = %d)!\n", fd);
+                        flag = 1;
+                        client_count--;
                         close(fd);
                         FD_CLR(fd, &active_fds);
 
@@ -106,6 +109,10 @@ int main() {
                     }
                 }
             }
+        }
+
+        if (flag == 1 && client_count == 0) {
+            break;
         }
     }
 
